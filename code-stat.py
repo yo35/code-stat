@@ -151,7 +151,7 @@ counters = {
 	'PHP'        : LOCCounter('PHP'),
 	'CSS'        : LOCCounter('CSS'),
 	'Python'     : LOCCounter('Python'),
-	'Fortran'    : LOCCounter('Fortran'),
+	'Fortran'    : LOCCounter('Fortran 90'),
 	'SQL'        : LOCCounter('SQL'),
 }
 
