@@ -185,6 +185,7 @@ if __name__ == '__main__':
 			toProcess.extend([os.path.join(path, f) for f in os.listdir(path)])
 		elif os.path.isfile(path):
 			filename, extension = os.path.splitext(path)
+			extension = extension.lower()
 			if extension in extensionToCounter:
 				extensionToCounter[extension](path)
 
