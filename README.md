@@ -24,7 +24,7 @@ Language   | File extensions
 Java       | `.java`
 C/C++      | `.c` `.cpp` `.h` `.hpp` `.cu` `.cuh`
 C#         | `.cs`
-JavaScript | `.js` `.jsx`
+JavaScript | `.js` `.jsx` `.mjs`
 TypeScript | `.ts` `.tsx`
 PHP        | `.php`
 CSS        | `.css`

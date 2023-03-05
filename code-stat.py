@@ -166,6 +166,7 @@ extensionToCounter = {
 	'.cs'   : lambda file: processCLikeFile(counters['CSharp'], file),
 	'.js'   : lambda file: processCLikeFile(counters['JavaScript'], file),
 	'.jsx'  : lambda file: processCLikeFile(counters['JavaScript'], file),
+	'.mjs'  : lambda file: processCLikeFile(counters['JavaScript'], file),
 	'.ts'   : lambda file: processCLikeFile(counters['TypeScript'], file),
 	'.tsx'  : lambda file: processCLikeFile(counters['TypeScript'], file),
 	'.php'  : lambda file: processCLikeFile(counters['PHP'], file),
