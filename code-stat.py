@@ -47,7 +47,7 @@ class LOCCounter:
 
 	def printStats(self):
 		print(self.title)
-		print(''.join(['-' for i in range(len(self.title))]))
+		print('-' * len(self.title))
 		print('Source files:       {:6d}'.format(self.fileCount))
 		print('Code lines:         {:6d}'.format(self.codeLineCount))
 		print('Comment lines:      {:6d}'.format(self.commentLineCount))
@@ -142,51 +142,53 @@ def processSqlFile(locCounter, file):
 	processSingleLineCommentFile(locCounter, file, '--')
 
 
-counters = {
-	'Java'       : LOCCounter('Java'),
-	'C'          : LOCCounter('C/C++'),
-	'CSharp'     : LOCCounter('C#'),
-	'JavaScript' : LOCCounter('JavaScript'),
-	'TypeScript' : LOCCounter('TypeScript'),
-	'PHP'        : LOCCounter('PHP'),
-	'CSS'        : LOCCounter('CSS'),
-	'Python'     : LOCCounter('Python'),
-	'Fortran'    : LOCCounter('Fortran 90'),
-	'SQL'        : LOCCounter('SQL'),
-}
+if __name__ == '__main__':
 
-extensionToCounter = {
-	'.java' : lambda file: processCLikeFile(counters['Java'], file),
-	'.c'    : lambda file: processCLikeFile(counters['C'], file),
-	'.cpp'  : lambda file: processCLikeFile(counters['C'], file),
-	'.h'    : lambda file: processCLikeFile(counters['C'], file),
-	'.hpp'  : lambda file: processCLikeFile(counters['C'], file),
-	'.cu'   : lambda file: processCLikeFile(counters['C'], file),
-	'.cuh'  : lambda file: processCLikeFile(counters['C'], file),
-	'.cs'   : lambda file: processCLikeFile(counters['CSharp'], file),
-	'.js'   : lambda file: processCLikeFile(counters['JavaScript'], file),
-	'.jsx'  : lambda file: processCLikeFile(counters['JavaScript'], file),
-	'.mjs'  : lambda file: processCLikeFile(counters['JavaScript'], file),
-	'.ts'   : lambda file: processCLikeFile(counters['TypeScript'], file),
-	'.tsx'  : lambda file: processCLikeFile(counters['TypeScript'], file),
-	'.php'  : lambda file: processCLikeFile(counters['PHP'], file),
-	'.css'  : lambda file: processCLikeFile(counters['CSS'], file, False),
-	'.py'   : lambda file: processScriptFile(counters['Python'], file),
-	'.f90'  : lambda file: processFortranFile(counters['Fortran'], file),
-	'.sql'  : lambda file: processSqlFile(counters['SQL'], file),
-}
+	counters = {
+		'Java'       : LOCCounter('Java'),
+		'C'          : LOCCounter('C/C++'),
+		'CSharp'     : LOCCounter('C#'),
+		'JavaScript' : LOCCounter('JavaScript'),
+		'TypeScript' : LOCCounter('TypeScript'),
+		'PHP'        : LOCCounter('PHP'),
+		'CSS'        : LOCCounter('CSS'),
+		'Python'     : LOCCounter('Python'),
+		'Fortran'    : LOCCounter('Fortran 90'),
+		'SQL'        : LOCCounter('SQL'),
+	}
 
-toProcess = [os.path.abspath(f) for f in sys.argv[:0:-1]]
-while len(toProcess) != 0:
-	path = toProcess.pop()
-	if os.path.isdir(path):
-		toProcess.extend([os.path.join(path, f) for f in os.listdir(path)])
-	elif os.path.isfile(path):
-		filename, extension = os.path.splitext(path)
-		if extension in extensionToCounter:
-			extensionToCounter[extension](path)
+	extensionToCounter = {
+		'.java' : lambda file: processCLikeFile(counters['Java'], file),
+		'.c'    : lambda file: processCLikeFile(counters['C'], file),
+		'.cpp'  : lambda file: processCLikeFile(counters['C'], file),
+		'.h'    : lambda file: processCLikeFile(counters['C'], file),
+		'.hpp'  : lambda file: processCLikeFile(counters['C'], file),
+		'.cu'   : lambda file: processCLikeFile(counters['C'], file),
+		'.cuh'  : lambda file: processCLikeFile(counters['C'], file),
+		'.cs'   : lambda file: processCLikeFile(counters['CSharp'], file),
+		'.js'   : lambda file: processCLikeFile(counters['JavaScript'], file),
+		'.jsx'  : lambda file: processCLikeFile(counters['JavaScript'], file),
+		'.mjs'  : lambda file: processCLikeFile(counters['JavaScript'], file),
+		'.ts'   : lambda file: processCLikeFile(counters['TypeScript'], file),
+		'.tsx'  : lambda file: processCLikeFile(counters['TypeScript'], file),
+		'.php'  : lambda file: processCLikeFile(counters['PHP'], file),
+		'.css'  : lambda file: processCLikeFile(counters['CSS'], file, False),
+		'.py'   : lambda file: processScriptFile(counters['Python'], file),
+		'.f90'  : lambda file: processFortranFile(counters['Fortran'], file),
+		'.sql'  : lambda file: processSqlFile(counters['SQL'], file),
+	}
 
-for counter in counters.values():
-	if not counter.isEmpty():
-		counter.printStats()
-		print()
+	toProcess = [os.path.abspath(f) for f in sys.argv[:0:-1]]
+	while len(toProcess) != 0:
+		path = toProcess.pop()
+		if os.path.isdir(path):
+			toProcess.extend([os.path.join(path, f) for f in os.listdir(path)])
+		elif os.path.isfile(path):
+			filename, extension = os.path.splitext(path)
+			if extension in extensionToCounter:
+				extensionToCounter[extension](path)
+
+	for counter in counters.values():
+		if not counter.isEmpty():
+			counter.printStats()
+			print()
