@@ -19,6 +19,14 @@
 #                                                                              #
 ################################################################################
 
+# Usage:
+#
+#   python3 code-stat.py <file-or-folder-1> [<file-or-folder-2> [<file-or-folder-3> ...]]
+#
+# Count the number of source code files passed in argument of the script, and the number of code lines
+# and comment lines they contain. If a folder is passed in argument of the script, all its content is
+# analyzed, including recursively the content of its child folders, grandchild folders, etc...
+
 
 import os
 import re
