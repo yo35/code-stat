@@ -178,6 +178,7 @@ if __name__ == '__main__':
 		'.sql'  : lambda file: processSqlFile(counters['SQL'], file),
 	}
 
+	# Visit recursively all the files and folders passed on the command line.
 	toProcess = [os.path.abspath(f) for f in sys.argv[:0:-1]]
 	while len(toProcess) != 0:
 		path = toProcess.pop()
@@ -189,7 +190,14 @@ if __name__ == '__main__':
 			if extension in extensionToCounter:
 				extensionToCounter[extension](path)
 
+	# Print the result.
+	print()
+	allCountersAreEmpty = True
 	for counter in counters.values():
 		if not counter.isEmpty():
+			allCountersAreEmpty = False
 			counter.printStats()
 			print()
+	if allCountersAreEmpty:
+		print('No source code file found')
+		print()
