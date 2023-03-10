@@ -180,15 +180,22 @@ if __name__ == '__main__':
 
 	# Visit recursively all the files and folders passed on the command line.
 	toProcess = [os.path.abspath(f) for f in sys.argv[:0:-1]]
+	errorCount = 0
 	while len(toProcess) != 0:
 		path = toProcess.pop()
-		if os.path.isdir(path):
-			toProcess.extend([os.path.join(path, f) for f in os.listdir(path)])
-		elif os.path.isfile(path):
-			filename, extension = os.path.splitext(path)
-			extension = extension.lower()
-			if extension in extensionToCounter:
-				extensionToCounter[extension](path)
+		try:
+			if os.path.isdir(path):
+				toProcess.extend([os.path.join(path, f) for f in os.listdir(path)])
+			elif os.path.isfile(path):
+				filename, extension = os.path.splitext(path)
+				extension = extension.lower()
+				if extension in extensionToCounter:
+					extensionToCounter[extension](path)
+		except Exception:
+			errorCount += 1
+			print('Error with {:s}'.format(path), file=sys.stderr)
+	if errorCount > 0:
+		print('{:d} error(s) encountered'.format(errorCount), file=sys.stderr)
 
 	# Print the result.
 	print()
