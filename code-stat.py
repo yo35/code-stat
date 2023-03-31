@@ -48,13 +48,13 @@ class LOCCounter:
 	def printStats(self):
 		print(self.title)
 		print('-' * len(self.title))
-		print('Source files:       {:6d}'.format(self.fileCount))
-		print('Code lines:         {:6d}'.format(self.codeLineCount))
-		print('Comment lines:      {:6d}'.format(self.commentLineCount))
+		print('Source files:       {:8d}'.format(self.fileCount))
+		print('Code lines:         {:8d}'.format(self.codeLineCount))
+		print('Comment lines:      {:8d}'.format(self.commentLineCount))
 		if self.codeLineCount == 0:
-			print('Comment/code ratio:      - %')
+			print('Comment/code ratio:        - %')
 		else:
-			print('Comment/code ratio: {:6.0f} %'.format(self.commentLineCount * 100 / self.codeLineCount))
+			print('Comment/code ratio: {:8.0f} %'.format(self.commentLineCount * 100 / self.codeLineCount))
 
 	def isEmpty(self):
 		return self.fileCount == 0
