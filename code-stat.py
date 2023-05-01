@@ -171,6 +171,7 @@ if __name__ == '__main__':
 		'.mjs'  : lambda file: processCLikeFile(counters['JavaScript'], file),
 		'.ts'   : lambda file: processCLikeFile(counters['TypeScript'], file),
 		'.tsx'  : lambda file: processCLikeFile(counters['TypeScript'], file),
+		'.mts'  : lambda file: processCLikeFile(counters['TypeScript'], file),
 		'.php'  : lambda file: processCLikeFile(counters['PHP'], file),
 		'.css'  : lambda file: processCLikeFile(counters['CSS'], file, False),
 		'.py'   : lambda file: processScriptFile(counters['Python'], file),

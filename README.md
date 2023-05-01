@@ -25,7 +25,7 @@ Java       | `.java`
 C/C++      | `.c` `.cpp` `.h` `.hpp` `.cu` `.cuh`
 C#         | `.cs`
 JavaScript | `.js` `.jsx` `.mjs`
-TypeScript | `.ts` `.tsx`
+TypeScript | `.ts` `.tsx` `.mts`
 PHP        | `.php`
 CSS        | `.css`
 Python     | `.py`
