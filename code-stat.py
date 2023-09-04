@@ -74,7 +74,8 @@ def processCLikeFile(locCounter, file, allowCPPSingleLineComment=True):
 
 			# Blank line
 			if len(line) == 0:
-				withinHeader = False
+				if not withinBlockComment:
+					withinHeader = False
 				continue
 
 			# Within a block comment
