@@ -29,6 +29,7 @@
 
 
 import os
+import re
 import sys
 
 
@@ -110,6 +111,13 @@ def findToken(token):
 	return fun
 
 
+def findRegex(pattern):
+	def fun(line):
+		m = re.search(pattern, line)
+		return None if m == None else m.start()
+	return fun
+
+
 def processCLikeFile(locCounter, file):
 	"""
 	Process a file with C/C++-like comments (i.e. // for single line comments, /* ... */ for block comments).
@@ -145,6 +153,14 @@ def processSqlFile(locCounter, file):
 	doProcessFile(locCounter, file, noSuchToken(), noSuchToken(), findToken('--'))
 
 
+def processPascalFile(locCounter, file):
+	"""
+	Process a Pascal file ( (* ... *) or { ... } for block comments, // for single line comments).
+	Comments starting with a $ character are ignored (compiler directives).
+	"""
+	doProcessFile(locCounter, file, findRegex('(?:\(\*|{)(?!\$)'), findRegex('(?:\*\)|})'), findRegex('//(?!\$)'))
+
+
 if __name__ == '__main__':
 
 	counters = {
@@ -158,6 +174,7 @@ if __name__ == '__main__':
 		'Python'     : LOCCounter('Python'),
 		'Fortran'    : LOCCounter('Fortran 90'),
 		'SQL'        : LOCCounter('SQL'),
+		'Pascal'     : LOCCounter('Pascal'),
 	}
 
 	extensionToCounter = {
@@ -180,6 +197,7 @@ if __name__ == '__main__':
 		'.py'   : lambda file: processPythonLikeFile(counters['Python'], file),
 		'.f90'  : lambda file: processFortranFile(counters['Fortran'], file),
 		'.sql'  : lambda file: processSqlFile(counters['SQL'], file),
+		'.pas'  : lambda file: processPascalFile(counters['Pascal'], file),
 	}
 
 	# Visit recursively all the files and folders passed on the command line.

@@ -31,5 +31,6 @@ CSS        | `.css`
 Python     | `.py`
 Fortran 90 | `.f90`
 SQL        | `.sql`
+Pascal     | `.pas`
 
 Only files having one of the above-mentionned extensions are analyzed.
