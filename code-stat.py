@@ -29,7 +29,6 @@
 
 
 import os
-import re
 import sys
 
 
@@ -60,9 +59,9 @@ class LOCCounter:
 		return self.fileCount == 0
 
 
-def processCLikeFile(locCounter, file, allowCPPSingleLineComment=True):
+def doProcessFile(locCounter, file, findBeginCommentToken, findEndCommentToken, findSingleLineCommentToken):
 	"""
-	Process a file with C/C++-like comments (i.e. // for single line comments, /* ... */ for block comments).
+	Core processing function.
 	"""
 
 	locCounter.fileCount += 1
@@ -82,65 +81,68 @@ def processCLikeFile(locCounter, file, allowCPPSingleLineComment=True):
 			if withinBlockComment:
 				if not withinHeader:
 					locCounter.commentLineCount += 1
-				if '*/' in line:
+				if findEndCommentToken(line) != None:
 					withinBlockComment = False
 
 			# Regular code
 			else:
-				if re.search('^/[/*]' if allowCPPSingleLineComment else '^/\*', line):
+				beginCommentToken = findBeginCommentToken(line)
+				if beginCommentToken == 0 or findSingleLineCommentToken(line) == 0:
 					if not withinHeader:
 						locCounter.commentLineCount += 1
 				else:
 					withinHeader = False
 					locCounter.codeLineCount += 1
-				if '/*' in line and not '*/' in line:
+				if beginCommentToken != None and findEndCommentToken(line) == None:
 					withinBlockComment = True
 
 
-def processSingleLineCommentFile(locCounter, file, commentCharacter):
+def noSuchToken():
+	def fun(line):
+		return None
+	return fun
+
+
+def findToken(token):
+	def fun(line):
+		pos = line.find(token)
+		return None if pos < 0 else pos
+	return fun
+
+
+def processCLikeFile(locCounter, file):
 	"""
-	Process a file that have only single line comments. 
+	Process a file with C/C++-like comments (i.e. // for single line comments, /* ... */ for block comments).
 	"""
-
-	locCounter.fileCount += 1
-	with open(file, 'r') as f:
-		withinHeader = True
-		for line in f:
-			line = line.strip()
-
-			# Blank line
-			if len(line) == 0:
-				withinHeader = False
-				continue
-
-			# Regular code
-			if line.startswith(commentCharacter):
-				if not withinHeader:
-					locCounter.commentLineCount += 1
-			else:
-				withinHeader = False
-				locCounter.codeLineCount += 1
+	doProcessFile(locCounter, file, findToken('/*'), findToken('*/'), findToken('//'))
 
 
-def processScriptFile(locCounter, file):
+def processCSSFile(locCounter, file):
+	"""
+	Process a CSS file (/* ... */ for block comments, no single line comments).
+	"""
+	doProcessFile(locCounter, file, findToken('/*'), findToken('*/'), noSuchToken())
+
+
+def processPythonLikeFile(locCounter, file):
 	"""
 	Process a file whose comments start with a hash character (#).
 	"""
-	processSingleLineCommentFile(locCounter, file, '#')
+	doProcessFile(locCounter, file, noSuchToken(), noSuchToken(), findToken('#'))
 
 
 def processFortranFile(locCounter, file):
 	"""
 	Process a Fortran 90 file (comments start with an exclamation mark character).
 	"""
-	processSingleLineCommentFile(locCounter, file, '!')
+	doProcessFile(locCounter, file, noSuchToken(), noSuchToken(), findToken('!'))
 
 
 def processSqlFile(locCounter, file):
 	"""
 	Process a SQL file (comments start with two hyphen characters).
 	"""
-	processSingleLineCommentFile(locCounter, file, '--')
+	doProcessFile(locCounter, file, noSuchToken(), noSuchToken(), findToken('--'))
 
 
 if __name__ == '__main__':
@@ -174,8 +176,8 @@ if __name__ == '__main__':
 		'.tsx'  : lambda file: processCLikeFile(counters['TypeScript'], file),
 		'.mts'  : lambda file: processCLikeFile(counters['TypeScript'], file),
 		'.php'  : lambda file: processCLikeFile(counters['PHP'], file),
-		'.css'  : lambda file: processCLikeFile(counters['CSS'], file, False),
-		'.py'   : lambda file: processScriptFile(counters['Python'], file),
+		'.css'  : lambda file: processCSSFile(counters['CSS'], file),
+		'.py'   : lambda file: processPythonLikeFile(counters['Python'], file),
 		'.f90'  : lambda file: processFortranFile(counters['Fortran'], file),
 		'.sql'  : lambda file: processSqlFile(counters['SQL'], file),
 	}
@@ -195,9 +197,9 @@ if __name__ == '__main__':
 					extensionToCounter[extension](path)
 		except Exception:
 			errorCount += 1
-			print('Error with {:s}'.format(path), file=sys.stderr)
+			print('Error with {:s}'.format(path), file = sys.stderr)
 	if errorCount > 0:
-		print('{:d} error(s) encountered'.format(errorCount), file=sys.stderr)
+		print('{:d} error(s) encountered'.format(errorCount), file = sys.stderr)
 
 	# Print the result.
 	print()
