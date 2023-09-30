@@ -22,7 +22,7 @@ Supported languages
 Language   | File extensions
 -----------|----------------
 Java       | `.java`
-C/C++      | `.c` `.cpp` `.h` `.hpp` `.cu` `.cuh`
+C/C++      | `.c` `.cpp` `.cxx` `.cc` `.h` `.hpp` `.hxx` `.hh` `.cu` `.cuh`
 C#         | `.cs`
 JavaScript | `.js` `.jsx` `.mjs`
 TypeScript | `.ts` `.tsx` `.mts`
