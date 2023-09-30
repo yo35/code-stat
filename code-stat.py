@@ -159,7 +159,7 @@ def processPascalFile(locCounter, file):
 	Process a Pascal file ( (* ... *) or { ... } for block comments, // for single line comments).
 	Comments starting with a $ character are ignored (compiler directives).
 	"""
-	doProcessFile(locCounter, file, findRegex('(?:\(\*|{)(?!\$)'), findRegex('(?:\*\)|})'), findRegex('//(?!\$)'))
+	doProcessFile(locCounter, file, findRegex('(?:\\(\\*|{)(?!\\$)'), findRegex('(?:\\*\\)|})'), findToken('//'))
 
 
 if __name__ == '__main__':
