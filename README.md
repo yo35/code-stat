@@ -4,6 +4,12 @@ Code Stat
 Count the number of code lines and comment lines on a set of source code files, and report the result.
 
 
+Install
+-------
+
+Just download [code-stat.py](code-stat.py). No extra package/file/dependency/stuff/... is required.
+
+
 Usage
 -----
 
