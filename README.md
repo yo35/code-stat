@@ -3,6 +3,8 @@ Code Stat
 
 Count the number of code lines and comment lines on a set of source code files, and report the result.
 
+[![Run tests](https://github.com/yo35/code-stat/actions/workflows/main.yml/badge.svg)](https://github.com/yo35/code-stat/actions/workflows/main.yml)
+
 
 Install
 -------

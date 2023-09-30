@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 ################################################################################
 #                                                                              #
-#   This script computes line of code metrics on a set of source code files.   #
+#   This file is part of Code Stat, a Python script to compute line of code    #
+#   metrics on a set of source code files.                                     #
 #   Copyright (C) 2023  Yoann Le Montagner <yo35 -at- melix.net>               #
 #                                                                              #
 #   This program is free software: you can redistribute it and/or modify       #
