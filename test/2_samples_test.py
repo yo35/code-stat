@@ -40,70 +40,70 @@ def computeLOCCounter(filename, processingFunction):
 
 
 def test_blank_before_first_block_comment():
-	counter = computeLOCCounter('blank_before_first_block_comment.cpp', codeStat.processCLikeFile)
+	counter = computeLOCCounter('blank_before_first_block_comment.cpp', codeStat.processCFamilyFile)
 	assert counter.fileCount == 1
 	assert counter.codeLineCount == 3
 	assert counter.commentLineCount == 4
 
 
 def test_blank_before_first_line_comment():
-	counter = computeLOCCounter('blank_before_first_line_comment.cpp', codeStat.processCLikeFile)
+	counter = computeLOCCounter('blank_before_first_line_comment.cpp', codeStat.processCFamilyFile)
 	assert counter.fileCount == 1
 	assert counter.codeLineCount == 3
 	assert counter.commentLineCount == 2
 
 
 def test_blank_within_file_header():
-	counter = computeLOCCounter('blank_within_file_header.cpp', codeStat.processCLikeFile)
+	counter = computeLOCCounter('blank_within_file_header.cpp', codeStat.processCFamilyFile)
 	assert counter.fileCount == 1
 	assert counter.codeLineCount == 3
 	assert counter.commentLineCount == 0
 
 
 def test_code_after_block_comment():
-	counter = computeLOCCounter('code_after_block_comment.cpp', codeStat.processCLikeFile)
+	counter = computeLOCCounter('code_after_block_comment.cpp', codeStat.processCFamilyFile)
 	assert counter.fileCount == 1
 	assert counter.codeLineCount == 2
 	assert counter.commentLineCount == 1
 
 
 def test_mixing_block_comment_and_code_1():
-	counter = computeLOCCounter('mixing_block_comment_and_code_1.cpp', codeStat.processCLikeFile)
+	counter = computeLOCCounter('mixing_block_comment_and_code_1.cpp', codeStat.processCFamilyFile)
 	assert counter.fileCount == 1
 	assert counter.codeLineCount == 3
 	assert counter.commentLineCount == 2
 
 
 def test_mixing_block_comment_and_code_2():
-	counter = computeLOCCounter('mixing_block_comment_and_code_2.cpp', codeStat.processCLikeFile)
+	counter = computeLOCCounter('mixing_block_comment_and_code_2.cpp', codeStat.processCFamilyFile)
 	assert counter.fileCount == 1
 	assert counter.codeLineCount == 3
 	assert counter.commentLineCount == 1
 
 
 def test_mixing_block_comment_and_code_3():
-	counter = computeLOCCounter('mixing_block_comment_and_code_3.cpp', codeStat.processCLikeFile)
+	counter = computeLOCCounter('mixing_block_comment_and_code_3.cpp', codeStat.processCFamilyFile)
 	assert counter.fileCount == 1
 	assert counter.codeLineCount == 3
 	assert counter.commentLineCount == 3
 
 
 def test_mixing_block_comment_and_code_4():
-	counter = computeLOCCounter('mixing_block_comment_and_code_4.cpp', codeStat.processCLikeFile)
+	counter = computeLOCCounter('mixing_block_comment_and_code_4.cpp', codeStat.processCFamilyFile)
 	assert counter.fileCount == 1
 	assert counter.codeLineCount == 3
 	assert counter.commentLineCount == 2
 
 
 def test_nested_block_comment_1():
-	counter = computeLOCCounter('nested_block_comment_1.cpp', codeStat.processCLikeFile)
+	counter = computeLOCCounter('nested_block_comment_1.cpp', codeStat.processCFamilyFile)
 	assert counter.fileCount == 1
 	assert counter.codeLineCount == 4
 	assert counter.commentLineCount == 1
 
 
 def test_nested_block_comment_2():
-	counter = computeLOCCounter('nested_block_comment_2.cpp', codeStat.processCLikeFile)
+	counter = computeLOCCounter('nested_block_comment_2.cpp', codeStat.processCFamilyFile)
 	assert counter.fileCount == 1
 	assert counter.codeLineCount == 3
 	assert counter.commentLineCount == 2

@@ -141,7 +141,7 @@ def findRegex(pattern):
 	return fun
 
 
-def processCLikeFile(locCounter, file):
+def processCFamilyFile(locCounter, file):
 	"""
 	Process a file with C/C++-like comments (i.e. // for single line comments, /* ... */ for block comments).
 	"""
@@ -155,7 +155,7 @@ def processCSSFile(locCounter, file):
 	doProcessFile(locCounter, file, findToken('/*'), findToken('*/'), noSuchToken())
 
 
-def processPythonLikeFile(locCounter, file):
+def processScriptFamilyFile(locCounter, file):
 	"""
 	Process a file whose comments start with a hash character (#).
 	"""
@@ -169,7 +169,7 @@ def processFortranFile(locCounter, file):
 	doProcessFile(locCounter, file, noSuchToken(), noSuchToken(), findToken('!'))
 
 
-def processSqlFile(locCounter, file):
+def processSQLFile(locCounter, file):
 	"""
 	Process a SQL file (comments start with two hyphen characters).
 	"""
@@ -186,46 +186,30 @@ def processPascalFile(locCounter, file):
 
 if __name__ == '__main__':
 
-	counters = {
-		'Java'       : LOCCounter('Java'),
-		'C'          : LOCCounter('C/C++'),
-		'CSharp'     : LOCCounter('C#'),
-		'JavaScript' : LOCCounter('JavaScript'),
-		'TypeScript' : LOCCounter('TypeScript'),
-		'PHP'        : LOCCounter('PHP'),
-		'CSS'        : LOCCounter('CSS'),
-		'Python'     : LOCCounter('Python'),
-		'Fortran'    : LOCCounter('Fortran 90'),
-		'SQL'        : LOCCounter('SQL'),
-		'Pascal'     : LOCCounter('Pascal'),
-	}
+	counters = []
+	extensionToAction = {}
 
-	extensionToCounter = {
-		'.java' : lambda file: processCLikeFile(counters['Java'], file),
-		'.c'    : lambda file: processCLikeFile(counters['C'], file),
-		'.cpp'  : lambda file: processCLikeFile(counters['C'], file),
-		'.cxx'  : lambda file: processCLikeFile(counters['C'], file),
-		'.cc'   : lambda file: processCLikeFile(counters['C'], file),
-		'.h'    : lambda file: processCLikeFile(counters['C'], file),
-		'.hpp'  : lambda file: processCLikeFile(counters['C'], file),
-		'.hxx'  : lambda file: processCLikeFile(counters['C'], file),
-		'.hh'   : lambda file: processCLikeFile(counters['C'], file),
-		'.cu'   : lambda file: processCLikeFile(counters['C'], file),
-		'.cuh'  : lambda file: processCLikeFile(counters['C'], file),
-		'.cs'   : lambda file: processCLikeFile(counters['CSharp'], file),
-		'.js'   : lambda file: processCLikeFile(counters['JavaScript'], file),
-		'.jsx'  : lambda file: processCLikeFile(counters['JavaScript'], file),
-		'.mjs'  : lambda file: processCLikeFile(counters['JavaScript'], file),
-		'.ts'   : lambda file: processCLikeFile(counters['TypeScript'], file),
-		'.tsx'  : lambda file: processCLikeFile(counters['TypeScript'], file),
-		'.mts'  : lambda file: processCLikeFile(counters['TypeScript'], file),
-		'.php'  : lambda file: processCLikeFile(counters['PHP'], file),
-		'.css'  : lambda file: processCSSFile(counters['CSS'], file),
-		'.py'   : lambda file: processPythonLikeFile(counters['Python'], file),
-		'.f90'  : lambda file: processFortranFile(counters['Fortran'], file),
-		'.sql'  : lambda file: processSqlFile(counters['SQL'], file),
-		'.pas'  : lambda file: processPascalFile(counters['Pascal'], file),
-	}
+	def registerLanguage(title, processFun, extensions):
+		counter = LOCCounter(title)
+		action = lambda file: processFun(counter, file)
+		counters.append(counter)
+		for extension in extensions:
+			if extension in extensionToAction:
+				raise ValueError('Extension conflict: ' + extension)
+			extensionToAction[extension] = action
+
+	# Register the supported languages.
+	registerLanguage('Java'      , processCFamilyFile     , [ '.java' ])
+	registerLanguage('C/C++'     , processCFamilyFile     , [ '.c', '.cpp', '.cxx', '.cc', '.h', '.hpp', '.hxx', '.hh', '.cu', '.cuh' ])
+	registerLanguage('C#'        , processCFamilyFile     , [ '.cs' ])
+	registerLanguage('JavaScript', processCFamilyFile     , [ '.js', '.jsx', '.mjs' ])
+	registerLanguage('TypeScript', processCFamilyFile     , [ '.ts', '.tsx', '.mts' ])
+	registerLanguage('PHP'       , processCFamilyFile     , [ '.php' ])
+	registerLanguage('CSS'       , processCSSFile         , [ '.css' ])
+	registerLanguage('Python'    , processScriptFamilyFile, [ '.py' ])
+	registerLanguage('Fortran 90', processFortranFile     , [ '.f90' ])
+	registerLanguage('SQL'       , processSQLFile         , [ '.sql' ])
+	registerLanguage('Pascal'    , processPascalFile      , [ '.pas' ])
 
 	# Visit recursively all the files and folders passed on the command line.
 	toProcess = [os.path.abspath(f) for f in sys.argv[:0:-1]]
@@ -238,8 +222,8 @@ if __name__ == '__main__':
 			elif os.path.isfile(path):
 				filename, extension = os.path.splitext(path)
 				extension = extension.lower()
-				if extension in extensionToCounter:
-					extensionToCounter[extension](path)
+				if extension in extensionToAction:
+					extensionToAction[extension](path)
 		except Exception:
 			errorCount += 1
 			print('Error with {:s}'.format(path), file = sys.stderr)
@@ -249,7 +233,7 @@ if __name__ == '__main__':
 	# Print the result.
 	print()
 	allCountersAreEmpty = True
-	for counter in counters.values():
+	for counter in counters:
 		if not counter.isEmpty():
 			allCountersAreEmpty = False
 			counter.printStats()

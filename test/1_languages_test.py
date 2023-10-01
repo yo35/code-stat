@@ -40,21 +40,21 @@ def computeLOCCounter(filename, processingFunction):
 
 
 def test_C():
-	counter = computeLOCCounter('c.c', codeStat.processCLikeFile)
+	counter = computeLOCCounter('c.c', codeStat.processCFamilyFile)
 	assert counter.fileCount == 1
 	assert counter.codeLineCount == 8
 	assert counter.commentLineCount == 5
 
 
 def test_CPlusPlus():
-	counter = computeLOCCounter('cplusplus.cpp', codeStat.processCLikeFile)
+	counter = computeLOCCounter('cplusplus.cpp', codeStat.processCFamilyFile)
 	assert counter.fileCount == 1
 	assert counter.codeLineCount == 8
 	assert counter.commentLineCount == 5
 
 
 def test_CSharp():
-	counter = computeLOCCounter('csharp.cs', codeStat.processCLikeFile)
+	counter = computeLOCCounter('csharp.cs', codeStat.processCFamilyFile)
 	assert counter.fileCount == 1
 	assert counter.codeLineCount == 9
 	assert counter.commentLineCount == 5
@@ -75,14 +75,14 @@ def test_Fortran90():
 
 
 def test_Java():
-	counter = computeLOCCounter('java.java', codeStat.processCLikeFile)
+	counter = computeLOCCounter('java.java', codeStat.processCFamilyFile)
 	assert counter.fileCount == 1
 	assert counter.codeLineCount == 9
 	assert counter.commentLineCount == 5
 
 
 def test_JavaScript():
-	counter = computeLOCCounter('javascript.js', codeStat.processCLikeFile)
+	counter = computeLOCCounter('javascript.js', codeStat.processCFamilyFile)
 	assert counter.fileCount == 1
 	assert counter.codeLineCount == 6
 	assert counter.commentLineCount == 5
@@ -96,21 +96,21 @@ def test_Pascal():
 
 
 def test_Python():
-	counter = computeLOCCounter('python.py', codeStat.processPythonLikeFile)
+	counter = computeLOCCounter('python.py', codeStat.processScriptFamilyFile)
 	assert counter.fileCount == 1
 	assert counter.codeLineCount == 7
 	assert counter.commentLineCount == 2
 
 
 def test_SQL():
-	counter = computeLOCCounter('sql.sql', codeStat.processSqlFile)
+	counter = computeLOCCounter('sql.sql', codeStat.processSQLFile)
 	assert counter.fileCount == 1
 	assert counter.codeLineCount == 6
 	assert counter.commentLineCount == 1
 
 
 def test_TypeScript():
-	counter = computeLOCCounter('typescript.ts', codeStat.processCLikeFile)
+	counter = computeLOCCounter('typescript.ts', codeStat.processCFamilyFile)
 	assert counter.fileCount == 1
 	assert counter.codeLineCount == 4
 	assert counter.commentLineCount == 4
