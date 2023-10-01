@@ -30,8 +30,9 @@ Supported languages
 Language   | File extensions
 -----------|----------------
 Java       | `.java`
-C/C++      | `.c` `.cpp` `.cxx` `.cc` `.h` `.hpp` `.hxx` `.hh` `.cu` `.cuh`
+C/C++      | `.c` `.cpp` `.cxx` `.cc` `.h` `.hpp` `.hxx` `.hh`
 C#         | `.cs`
+CUDA       | `.cu` `.cuh`
 JavaScript | `.js` `.jsx` `.mjs`
 TypeScript | `.ts` `.tsx` `.mts`
 PHP        | `.php`

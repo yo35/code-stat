@@ -200,8 +200,9 @@ if __name__ == '__main__':
 
 	# Register the supported languages.
 	registerLanguage('Java'      , processCFamilyFile     , [ '.java' ])
-	registerLanguage('C/C++'     , processCFamilyFile     , [ '.c', '.cpp', '.cxx', '.cc', '.h', '.hpp', '.hxx', '.hh', '.cu', '.cuh' ])
+	registerLanguage('C/C++'     , processCFamilyFile     , [ '.c', '.cpp', '.cxx', '.cc', '.h', '.hpp', '.hxx', '.hh' ])
 	registerLanguage('C#'        , processCFamilyFile     , [ '.cs' ])
+	registerLanguage('CUDA'      , processCFamilyFile     , [ '.cu', '.cuh' ])
 	registerLanguage('JavaScript', processCFamilyFile     , [ '.js', '.jsx', '.mjs' ])
 	registerLanguage('TypeScript', processCFamilyFile     , [ '.ts', '.tsx', '.mts' ])
 	registerLanguage('PHP'       , processCFamilyFile     , [ '.php' ])

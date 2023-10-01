@@ -67,6 +67,13 @@ def test_CSS():
 	assert counter.commentLineCount == 1
 
 
+def test_CUDA():
+	counter = computeLOCCounter('cuda.cu', codeStat.processCFamilyFile)
+	assert counter.fileCount == 1
+	assert counter.codeLineCount == 9
+	assert counter.commentLineCount == 4
+
+
 def test_Fortran90():
 	counter = computeLOCCounter('fortran90.f90', codeStat.processFortranFile)
 	assert counter.fileCount == 1
