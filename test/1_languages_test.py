@@ -39,6 +39,13 @@ def computeLOCCounter(filename, processingFunction):
 	return counter
 
 
+def test_C():
+	counter = computeLOCCounter('c.c', codeStat.processCLikeFile)
+	assert counter.fileCount == 1
+	assert counter.codeLineCount == 8
+	assert counter.commentLineCount == 5
+
+
 def test_CPlusPlus():
 	counter = computeLOCCounter('cplusplus.cpp', codeStat.processCLikeFile)
 	assert counter.fileCount == 1
@@ -46,10 +53,38 @@ def test_CPlusPlus():
 	assert counter.commentLineCount == 5
 
 
+def test_CSharp():
+	counter = computeLOCCounter('csharp.cs', codeStat.processCLikeFile)
+	assert counter.fileCount == 1
+	assert counter.codeLineCount == 9
+	assert counter.commentLineCount == 5
+
+
+def test_CSS():
+	counter = computeLOCCounter('css.css', codeStat.processCSSFile)
+	assert counter.fileCount == 1
+	assert counter.codeLineCount == 3
+	assert counter.commentLineCount == 1
+
+
 def test_Fortran90():
 	counter = computeLOCCounter('fortran90.f90', codeStat.processFortranFile)
 	assert counter.fileCount == 1
 	assert counter.codeLineCount == 14
+	assert counter.commentLineCount == 5
+
+
+def test_Java():
+	counter = computeLOCCounter('java.java', codeStat.processCLikeFile)
+	assert counter.fileCount == 1
+	assert counter.codeLineCount == 9
+	assert counter.commentLineCount == 5
+
+
+def test_JavaScript():
+	counter = computeLOCCounter('javascript.js', codeStat.processCLikeFile)
+	assert counter.fileCount == 1
+	assert counter.codeLineCount == 6
 	assert counter.commentLineCount == 5
 
 
@@ -65,3 +100,17 @@ def test_Python():
 	assert counter.fileCount == 1
 	assert counter.codeLineCount == 7
 	assert counter.commentLineCount == 2
+
+
+def test_SQL():
+	counter = computeLOCCounter('sql.sql', codeStat.processSqlFile)
+	assert counter.fileCount == 1
+	assert counter.codeLineCount == 6
+	assert counter.commentLineCount == 1
+
+
+def test_TypeScript():
+	counter = computeLOCCounter('typescript.ts', codeStat.processCLikeFile)
+	assert counter.fileCount == 1
+	assert counter.codeLineCount == 4
+	assert counter.commentLineCount == 4

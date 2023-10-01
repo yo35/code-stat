@@ -1,0 +1,9 @@
+/******************************************************************************
+ * This is a file header, not counted as comment.                             *
+ ******************************************************************************/
+
+/* I'm a comment line. */
+
+body::before { /* I'm a mixed code-comment line (counted as code). */
+	content: "Hello World!";
+}
