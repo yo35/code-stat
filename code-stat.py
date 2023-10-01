@@ -68,7 +68,7 @@ class LOCCounter:
 		return self.fileCount == 0
 
 
-def doProcessFile(locCounter, file, findBeginCommentToken, findEndCommentToken, findSingleLineCommentToken):
+def doProcessFile(locCounter, file, findBeginCommentToken, findEndCommentToken, findSingleLineCommentToken, isMandatoryFirstInstruction):
 	"""
 	Core processing function.
 	"""
@@ -77,8 +77,10 @@ def doProcessFile(locCounter, file, findBeginCommentToken, findEndCommentToken, 
 	with open(file, 'r') as f:
 		withinBlockComment = False
 		withinHeader = True
+		lineIndex = 0 # 1-based index
 		for line in f:
 			line = line.strip()
+			lineIndex = lineIndex + 1
 
 			# Blank line
 			if len(line) == 0:
@@ -99,8 +101,9 @@ def doProcessFile(locCounter, file, findBeginCommentToken, findEndCommentToken, 
 					if not withinHeader:
 						locCounter.commentLineCount += 1
 				else:
-					withinHeader = False
 					locCounter.codeLineCount += 1
+					if withinHeader and not (lineIndex == 1 and isMandatoryFirstInstruction(line)):
+						withinHeader = False
 				if beginCommentToken != None and (singleLineCommentToken == None or beginCommentToken < singleLineCommentToken):
 					withinBlockComment = True
 					line = line[(beginCommentToken + 1):]
@@ -141,39 +144,58 @@ def findRegex(pattern):
 	return fun
 
 
+def isFalse():
+	def fun(line):
+		return False
+	return fun
+
+
+def isStartingWithToken(token):
+	def fun(line):
+		return line.startswith(token)
+	return fun
+
+
 def processCFamilyFile(locCounter, file):
 	"""
 	Process a file with C/C++-like comments (i.e. // for single line comments, /* ... */ for block comments).
 	"""
-	doProcessFile(locCounter, file, findToken('/*'), findToken('*/'), findToken('//'))
+	doProcessFile(locCounter, file, findToken('/*'), findToken('*/'), findToken('//'), isFalse())
+
+
+def processPHPFile(locCounter, file):
+	"""
+	Process a PHP file (i.e. // for single line comments, /* ... */ for block comments, and possibly a <?php instruction on the first line).
+	"""
+	doProcessFile(locCounter, file, findToken('/*'), findToken('*/'), findToken('//'), isStartingWithToken('<?php'))
 
 
 def processCSSFile(locCounter, file):
 	"""
 	Process a CSS file (/* ... */ for block comments, no single line comments).
 	"""
-	doProcessFile(locCounter, file, findToken('/*'), findToken('*/'), noSuchToken())
+	doProcessFile(locCounter, file, findToken('/*'), findToken('*/'), noSuchToken(), isFalse())
 
 
 def processScriptFamilyFile(locCounter, file):
 	"""
 	Process a file whose comments start with a hash character (#).
 	"""
-	doProcessFile(locCounter, file, noSuchToken(), noSuchToken(), findToken('#'))
+	doProcessFile(locCounter, file, noSuchToken(), noSuchToken(), findToken('#'), isFalse())
 
 
 def processFortranFile(locCounter, file):
 	"""
 	Process a Fortran 90 file (comments start with an exclamation mark character).
 	"""
-	doProcessFile(locCounter, file, noSuchToken(), noSuchToken(), findToken('!'))
+	doProcessFile(locCounter, file, noSuchToken(), noSuchToken(), findToken('!'), isFalse())
 
 
 def processSQLFile(locCounter, file):
 	"""
 	Process a SQL file (comments start with two hyphen characters).
 	"""
-	doProcessFile(locCounter, file, noSuchToken(), noSuchToken(), findToken('--'))
+	doProcessFile(locCounter, file, noSuchToken(), noSuchToken(), findToken('--'), isFalse())
 
 
 def processPascalFile(locCounter, file):
@@ -181,7 +203,7 @@ def processPascalFile(locCounter, file):
 	Process a Pascal file ( (* ... *) or { ... } for block comments, // for single line comments).
 	Comments starting with a $ character are ignored (compiler directives).
 	"""
-	doProcessFile(locCounter, file, findRegex('(?:\\(\\*|{)(?!\\$)'), findRegex('(?:\\*\\)|})'), findToken('//'))
+	doProcessFile(locCounter, file, findRegex('(?:\\(\\*|{)(?!\\$)'), findRegex('(?:\\*\\)|})'), findToken('//'), isFalse())
 
 
 if __name__ == '__main__':
@@ -205,7 +227,7 @@ if __name__ == '__main__':
 	registerLanguage('CUDA'      , processCFamilyFile     , [ '.cu', '.cuh' ])
 	registerLanguage('JavaScript', processCFamilyFile     , [ '.js', '.jsx', '.mjs' ])
 	registerLanguage('TypeScript', processCFamilyFile     , [ '.ts', '.tsx', '.mts' ])
-	registerLanguage('PHP'       , processCFamilyFile     , [ '.php' ])
+	registerLanguage('PHP'       , processPHPFile         , [ '.php' ])
 	registerLanguage('CSS'       , processCSSFile         , [ '.css' ])
 	registerLanguage('Python'    , processScriptFamilyFile, [ '.py' ])
 	registerLanguage('Fortran 90', processFortranFile     , [ '.f90' ])

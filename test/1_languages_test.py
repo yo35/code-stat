@@ -102,6 +102,13 @@ def test_Pascal():
 	assert counter.commentLineCount == 5
 
 
+def test_PHP():
+	counter = computeLOCCounter('php.php', codeStat.processPHPFile)
+	assert counter.fileCount == 1
+	assert counter.codeLineCount == 6
+	assert counter.commentLineCount == 4
+
+
 def test_Python():
 	counter = computeLOCCounter('python.py', codeStat.processScriptFamilyFile)
 	assert counter.fileCount == 1
