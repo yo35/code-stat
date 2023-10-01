@@ -27,6 +27,13 @@
 # Count the number of source code files passed in argument of the script, and the number of code lines
 # and comment lines they contain. If a folder is passed in argument of the script, all its content is
 # analyzed, including recursively the content of its child folders, grandchild folders, etc...
+#
+# Disclaimer:
+# The parsing strategy implemented in this script is a (significantly) simplified version of what would be
+# necessary to implement a real programming language parser. As such, it may not distinguish accurately
+# between code lines and comment lines in some weird cases (e.g. if a string litteral contains something
+# that looks as a comment token). Still, when it comes to analyze realistic code bases, these situations
+# are unlikely to happen frequently.
 
 
 import os
@@ -83,20 +90,35 @@ def doProcessFile(locCounter, file, findBeginCommentToken, findEndCommentToken, 
 			if withinBlockComment:
 				if not withinHeader:
 					locCounter.commentLineCount += 1
-				if findEndCommentToken(line) != None:
-					withinBlockComment = False
 
 			# Regular code
 			else:
 				beginCommentToken = findBeginCommentToken(line)
-				if beginCommentToken == 0 or findSingleLineCommentToken(line) == 0:
+				singleLineCommentToken = findSingleLineCommentToken(line)
+				if beginCommentToken == 0 or singleLineCommentToken == 0:
 					if not withinHeader:
 						locCounter.commentLineCount += 1
 				else:
 					withinHeader = False
 					locCounter.codeLineCount += 1
-				if beginCommentToken != None and findEndCommentToken(line) == None:
+				if beginCommentToken != None and (singleLineCommentToken == None or beginCommentToken < singleLineCommentToken):
 					withinBlockComment = True
+					line = line[(beginCommentToken + 1):]
+
+			# Look for the end of the current block comment (and potential following
+			# block comments that both begin and end on the current line)
+			if withinBlockComment:
+				while True:
+					endCommentToken = findEndCommentToken(line)
+					if endCommentToken == None:
+						break
+					line = line[(endCommentToken + 1):]
+					beginCommentToken = findBeginCommentToken(line)
+					singleLineCommentToken = findSingleLineCommentToken(line)
+					if beginCommentToken == None or (singleLineCommentToken != None and singleLineCommentToken < beginCommentToken):
+						withinBlockComment = False
+						break
+					line = line[(beginCommentToken + 1):]
 
 
 def noSuchToken():
