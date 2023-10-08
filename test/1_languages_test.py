@@ -95,6 +95,13 @@ def test_JavaScript():
 	assert counter.commentLineCount == 5
 
 
+def test_Kotlin():
+	counter = computeLOCCounter('kotlin.kt', codeStat.processCFamilyFile)
+	assert counter.fileCount == 1
+	assert counter.codeLineCount == 7
+	assert counter.commentLineCount == 5
+
+
 def test_Pascal():
 	counter = computeLOCCounter('pascal.pas', codeStat.processPascalFile)
 	assert counter.fileCount == 1

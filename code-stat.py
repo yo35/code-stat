@@ -221,18 +221,19 @@ if __name__ == '__main__':
 			extensionToAction[extension] = action
 
 	# Register the supported languages.
-	registerLanguage('Java'      , processCFamilyFile     , [ '.java' ])
 	registerLanguage('C/C++'     , processCFamilyFile     , [ '.c', '.cpp', '.cxx', '.cc', '.h', '.hpp', '.hxx', '.hh' ])
 	registerLanguage('C#'        , processCFamilyFile     , [ '.cs' ])
-	registerLanguage('CUDA'      , processCFamilyFile     , [ '.cu', '.cuh' ])
-	registerLanguage('JavaScript', processCFamilyFile     , [ '.js', '.jsx', '.mjs' ])
-	registerLanguage('TypeScript', processCFamilyFile     , [ '.ts', '.tsx', '.mts' ])
-	registerLanguage('PHP'       , processPHPFile         , [ '.php' ])
 	registerLanguage('CSS'       , processCSSFile         , [ '.css' ])
-	registerLanguage('Python'    , processScriptFamilyFile, [ '.py' ])
+	registerLanguage('CUDA'      , processCFamilyFile     , [ '.cu', '.cuh' ])
 	registerLanguage('Fortran 90', processFortranFile     , [ '.f90' ])
-	registerLanguage('SQL'       , processSQLFile         , [ '.sql' ])
+	registerLanguage('Java'      , processCFamilyFile     , [ '.java' ])
+	registerLanguage('JavaScript', processCFamilyFile     , [ '.js', '.jsx', '.mjs' ])
+	registerLanguage('Kotlin'    , processCFamilyFile     , [ '.kt' ])
 	registerLanguage('Pascal'    , processPascalFile      , [ '.pas' ])
+	registerLanguage('PHP'       , processPHPFile         , [ '.php' ])
+	registerLanguage('Python'    , processScriptFamilyFile, [ '.py' ])
+	registerLanguage('SQL'       , processSQLFile         , [ '.sql' ])
+	registerLanguage('TypeScript', processCFamilyFile     , [ '.ts', '.tsx', '.mts' ])
 
 	# Visit recursively all the files and folders passed on the command line.
 	toProcess = [os.path.abspath(f) for f in sys.argv[:0:-1]]
