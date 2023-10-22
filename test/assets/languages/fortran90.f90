@@ -3,6 +3,7 @@
 ! ------------------------------------------------------------------------------
 
 ! I'm a comment line.
+!DIR$ DEFINE ImACompilerDirective
 
 module moduleHelloWorld
 

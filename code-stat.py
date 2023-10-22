@@ -187,8 +187,9 @@ def processScriptFamilyFile(locCounter, file):
 def processFortranFile(locCounter, file):
 	"""
 	Process a Fortran 90 file (comments start with an exclamation mark character).
+	Comments starting with !DIR$, !$OMP, etc... are counted as code (compiler directives).
 	"""
-	doProcessFile(locCounter, file, noSuchToken(), noSuchToken(), findToken('!'), isFalse())
+	doProcessFile(locCounter, file, noSuchToken(), noSuchToken(), findRegex('!(?!\\w+\\$|\\$\\w+)'), isFalse())
 
 
 def processSQLFile(locCounter, file):
@@ -201,7 +202,7 @@ def processSQLFile(locCounter, file):
 def processPascalFile(locCounter, file):
 	"""
 	Process a Pascal file ( (* ... *) or { ... } for block comments, // for single line comments).
-	Comments starting with a $ character are ignored (compiler directives).
+	Comments starting with a $ character are counted as code (compiler directives).
 	"""
 	doProcessFile(locCounter, file, findRegex('(?:\\(\\*|{)(?!\\$)'), findRegex('(?:\\*\\)|})'), findToken('//'), isFalse())
 

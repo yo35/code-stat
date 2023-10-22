@@ -77,7 +77,7 @@ def test_CUDA():
 def test_Fortran90():
 	counter = computeLOCCounter('fortran90.f90', codeStat.processFortranFile)
 	assert counter.fileCount == 1
-	assert counter.codeLineCount == 14
+	assert counter.codeLineCount == 15
 	assert counter.commentLineCount == 5
 
 

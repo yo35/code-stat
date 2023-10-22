@@ -109,6 +109,13 @@ def test_nested_block_comment_2():
 	assert counter.commentLineCount == 2
 
 
+def test_Fortran_compiler_directives():
+	counter = computeLOCCounter('compiler_directives.f90', codeStat.processFortranFile)
+	assert counter.fileCount == 1
+	assert counter.codeLineCount == 5
+	assert counter.commentLineCount == 0
+
+
 def test_Pascal_compiler_directives_with_braces():
 	counter = computeLOCCounter('compiler_directive_braces.pas', codeStat.processPascalFile)
 	assert counter.fileCount == 1
