@@ -74,8 +74,47 @@ class LOCCounter:
         return self.fileCount == 0
 
 
-def doProcessFile(locCounter: LOCCounter, file: str, findBeginCommentToken: Callable[[str], Optional[int]], findEndCommentToken: Callable[[str], Optional[int]],
-                  findSingleLineCommentToken: Callable[[str], Optional[int]], isMandatoryFirstInstruction: Callable[[str], bool]) -> None:
+def noSuchToken() -> Callable[[str], Optional[int]]:
+    def fun(line: str) -> Optional[int]:
+        return None
+    return fun
+
+
+def findToken(token: str) -> Callable[[str], Optional[int]]:
+    def fun(line: str) -> Optional[int]:
+        pos = line.find(token)
+        return None if pos < 0 else pos
+    return fun
+
+
+def findRegex(pattern: str) -> Callable[[str], Optional[int]]:
+    compiledPattern = re.compile(pattern)
+    def fun(line: str) -> Optional[int]:
+        m = re.search(compiledPattern, line)
+        return None if m is None else m.start()
+    return fun
+
+
+def isFalse() -> Callable[[str], bool]:
+    def fun(line: str) -> bool:
+        return False
+    return fun
+
+
+def isStartingWithToken(token: str) -> Callable[[str], bool]:
+    def fun(line: str) -> bool:
+        return line.startswith(token)
+    return fun
+
+
+def doProcessFile(
+        locCounter: LOCCounter,
+        file: str,
+        findBeginCommentToken: Callable[[str], Optional[int]] = noSuchToken(),
+        findEndCommentToken: Callable[[str], Optional[int]] = noSuchToken(),
+        findSingleLineCommentToken: Callable[[str], Optional[int]] = noSuchToken(),
+        isMandatoryFirstInstruction: Callable[[str], bool] = isFalse(),
+    ) -> None:
     """
     Core processing function.
     """
@@ -131,64 +170,55 @@ def doProcessFile(locCounter: LOCCounter, file: str, findBeginCommentToken: Call
                     line = line[(beginCommentToken + 1):]
 
 
-def noSuchToken() -> Callable[[str], Optional[int]]:
-    def fun(line: str) -> Optional[int]:
-        return None
-    return fun
-
-
-def findToken(token: str) -> Callable[[str], Optional[int]]:
-    def fun(line: str) -> Optional[int]:
-        pos = line.find(token)
-        return None if pos < 0 else pos
-    return fun
-
-
-def findRegex(pattern: str) -> Callable[[str], Optional[int]]:
-    def fun(line: str) -> Optional[int]:
-        m = re.search(pattern, line)
-        return None if m is None else m.start()
-    return fun
-
-
-def isFalse() -> Callable[[str], bool]:
-    def fun(line: str) -> bool:
-        return False
-    return fun
-
-
-def isStartingWithToken(token: str) -> Callable[[str], bool]:
-    def fun(line: str) -> bool:
-        return line.startswith(token)
-    return fun
-
-
 def processCFamilyFile(locCounter: LOCCounter, file: str) -> None:
     """
     Process a file with C/C++-like comments (i.e. // for single line comments, /* ... */ for block comments).
     """
-    doProcessFile(locCounter, file, findToken('/*'), findToken('*/'), findToken('//'), isFalse())
+    doProcessFile(
+        locCounter,
+        file,
+        findBeginCommentToken = findToken('/*'),
+        findEndCommentToken = findToken('*/'),
+        findSingleLineCommentToken = findToken('//'),
+    )
 
 
 def processPHPFile(locCounter: LOCCounter, file: str) -> None:
     """
-    Process a PHP file (i.e. // for single line comments, /* ... */ for block comments, and possibly a <?php instruction on the first line).
+    Process a PHP file (i.e. // for single line comments, /* ... */ for block comments,
+    and possibly a <?php instruction on the first line).
     """
-    doProcessFile(locCounter, file, findToken('/*'), findToken('*/'), findToken('//'), isStartingWithToken('<?php'))
+    doProcessFile(
+        locCounter,
+        file,
+        findBeginCommentToken = findToken('/*'),
+        findEndCommentToken = findToken('*/'),
+        findSingleLineCommentToken = findToken('//'),
+        isMandatoryFirstInstruction = isStartingWithToken('<?php'),
+    )
 
 
 def processCSSFile(locCounter: LOCCounter, file: str) -> None:
     """
     Process a CSS file (/* ... */ for block comments, no single line comments).
     """
-    doProcessFile(locCounter, file, findToken('/*'), findToken('*/'), noSuchToken(), isFalse())
+    doProcessFile(
+        locCounter,
+        file,
+        findBeginCommentToken = findToken('/*'),
+        findEndCommentToken = findToken('*/'),
+    )
 
 
 def processScriptFamilyFile(locCounter: LOCCounter, file: str) -> None:
     """
     Process a file whose comments start with a hash character (#).
     """
-    doProcessFile(locCounter, file, noSuchToken(), noSuchToken(), findToken('#'), isFalse())
+    doProcessFile(
+        locCounter,
+        file,
+        findSingleLineCommentToken = findToken('#'),
+    )
 
 
 def processFortranFile(locCounter: LOCCounter, file: str) -> None:
@@ -196,14 +226,22 @@ def processFortranFile(locCounter: LOCCounter, file: str) -> None:
     Process a Fortran 90 file (comments start with an exclamation mark character).
     Comments starting with !DIR$, !$OMP, etc... are counted as code (compiler directives).
     """
-    doProcessFile(locCounter, file, noSuchToken(), noSuchToken(), findRegex('!(?!\\w+\\$|\\$\\w+)'), isFalse())
+    doProcessFile(
+        locCounter,
+        file,
+        findSingleLineCommentToken = findRegex('!(?!\\w+\\$|\\$\\w+)'),
+    )
 
 
 def processSQLFile(locCounter: LOCCounter, file: str) -> None:
     """
     Process a SQL file (comments start with two hyphen characters).
     """
-    doProcessFile(locCounter, file, noSuchToken(), noSuchToken(), findToken('--'), isFalse())
+    doProcessFile(
+        locCounter,
+        file,
+        findSingleLineCommentToken = findToken('--'),
+    )
 
 
 def processPascalFile(locCounter: LOCCounter, file: str) -> None:
@@ -211,7 +249,13 @@ def processPascalFile(locCounter: LOCCounter, file: str) -> None:
     Process a Pascal file ( (* ... *) or { ... } for block comments, // for single line comments).
     Comments starting with a $ character are counted as code (compiler directives).
     """
-    doProcessFile(locCounter, file, findRegex('(?:\\(\\*|{)(?!\\$)'), findRegex('(?:\\*\\)|})'), findToken('//'), isFalse())
+    doProcessFile(
+        locCounter,
+        file,
+        findBeginCommentToken = findRegex('(?:\\(\\*|{)(?!\\$)'),
+        findEndCommentToken = findRegex('(?:\\*\\)|})'),
+        findSingleLineCommentToken = findToken('//'),
+    )
 
 
 if __name__ == '__main__':
