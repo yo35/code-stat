@@ -135,3 +135,10 @@ def test_TypeScript():
     assert counter.fileCount == 1
     assert counter.codeLineCount == 4
     assert counter.commentLineCount == 4
+
+
+def test_UnixShellScript():
+    counter = computeLOCCounter('bash.sh', codeStat.processScriptFamilyFile)
+    assert counter.fileCount == 1
+    assert counter.codeLineCount == 4
+    assert counter.commentLineCount == 2
