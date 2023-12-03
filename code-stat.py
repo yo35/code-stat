@@ -2,7 +2,7 @@
 ################################################################################
 #                                                                              #
 #   This file is part of Code Stat, a Python script to compute line of code    #
-#   metrics on a set of source code files.                                     #
+#   metrics on a set of source code files, for several programming languages.  #
 #   Copyright (C) 2023  Yoann Le Montagner <yo35 -at- melix.net>               #
 #                                                                              #
 #   This program is free software: you can redistribute it and/or modify       #
@@ -20,20 +20,24 @@
 #                                                                              #
 ################################################################################
 
-# Usage:
-#
-#   python3 code-stat.py <file-or-folder-1> [<file-or-folder-2> [<file-or-folder-3> ...]]
-#
-# Count the number of source code files passed in argument of the script, and the number of code lines
-# and comment lines they contain. If a folder is passed in argument of the script, all its content is
-# analyzed, including recursively the content of its child folders, grandchild folders, etc...
-#
-# Disclaimer:
-# The parsing strategy implemented in this script is a (significantly) simplified version of what would be
-# necessary to implement a real programming language parser. As such, it may not distinguish accurately
-# between code lines and comment lines in some weird cases (e.g. if a string litteral contains something
-# that looks as a comment token). Still, when it comes to analyze realistic code bases, these situations
-# are unlikely to happen frequently.
+"""
+Compute line of code metrics on source code files, for several programming languages.
+
+Usage:
+
+	python3 code-stat.py <file-or-folder-1> [<file-or-folder-2> [<file-or-folder-3> ...]]
+
+Count the number of source code files passed in argument of the script, and the number of code lines
+and comment lines they contain. If a folder is passed in argument of the script, all its content is
+analyzed, including recursively the content of its child folders, grandchild folders, etc...
+
+Disclaimer:
+The parsing strategy implemented in this script is a (significantly) simplified version of what would be
+necessary to implement a real programming language parser. As such, it may not distinguish accurately
+between code lines and comment lines in some weird cases (e.g. if a string litteral contains something
+that looks as a comment token). Still, when it comes to analyze realistic code bases, these situations
+are unlikely to happen frequently.
+"""
 
 
 import os
