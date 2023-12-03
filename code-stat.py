@@ -44,6 +44,8 @@ import os
 import re
 import sys
 
+from typing import Callable, Optional
+
 
 class LOCCounter:
     """
@@ -51,13 +53,13 @@ class LOCCounter:
     and comments they contain.
     """
 
-    def __init__(self, title):
+    def __init__(self, title: str) -> None:
         self.title = title
         self.fileCount = 0
         self.codeLineCount = 0
         self.commentLineCount = 0
 
-    def printStats(self):
+    def printStats(self) -> None:
         print(self.title)
         print('-' * len(self.title))
         print('Source files:       {:8d}'.format(self.fileCount))
@@ -68,11 +70,12 @@ class LOCCounter:
         else:
             print('Comment/code ratio: {:8.0f} %'.format(self.commentLineCount * 100 / self.codeLineCount))
 
-    def isEmpty(self):
+    def isEmpty(self) -> bool:
         return self.fileCount == 0
 
 
-def doProcessFile(locCounter, file, findBeginCommentToken, findEndCommentToken, findSingleLineCommentToken, isMandatoryFirstInstruction):
+def doProcessFile(locCounter: LOCCounter, file: str, findBeginCommentToken: Callable[[str], Optional[int]], findEndCommentToken: Callable[[str], Optional[int]],
+                  findSingleLineCommentToken: Callable[[str], Optional[int]], isMandatoryFirstInstruction: Callable[[str], bool]) -> None:
     """
     Core processing function.
     """
@@ -108,7 +111,7 @@ def doProcessFile(locCounter, file, findBeginCommentToken, findEndCommentToken, 
                     locCounter.codeLineCount += 1
                     if withinHeader and not (lineIndex == 1 and isMandatoryFirstInstruction(line)):
                         withinHeader = False
-                if beginCommentToken != None and (singleLineCommentToken == None or beginCommentToken < singleLineCommentToken):
+                if beginCommentToken is not None and (singleLineCommentToken is None or beginCommentToken < singleLineCommentToken):
                     withinBlockComment = True
                     line = line[(beginCommentToken + 1):]
 
@@ -117,78 +120,78 @@ def doProcessFile(locCounter, file, findBeginCommentToken, findEndCommentToken, 
             if withinBlockComment:
                 while True:
                     endCommentToken = findEndCommentToken(line)
-                    if endCommentToken == None:
+                    if endCommentToken is None:
                         break
                     line = line[(endCommentToken + 1):]
                     beginCommentToken = findBeginCommentToken(line)
                     singleLineCommentToken = findSingleLineCommentToken(line)
-                    if beginCommentToken == None or (singleLineCommentToken != None and singleLineCommentToken < beginCommentToken):
+                    if beginCommentToken is None or (singleLineCommentToken is not None and singleLineCommentToken < beginCommentToken):
                         withinBlockComment = False
                         break
                     line = line[(beginCommentToken + 1):]
 
 
-def noSuchToken():
-    def fun(line):
+def noSuchToken() -> Callable[[str], Optional[int]]:
+    def fun(line: str) -> Optional[int]:
         return None
     return fun
 
 
-def findToken(token):
-    def fun(line):
+def findToken(token: str) -> Callable[[str], Optional[int]]:
+    def fun(line: str) -> Optional[int]:
         pos = line.find(token)
         return None if pos < 0 else pos
     return fun
 
 
-def findRegex(pattern):
-    def fun(line):
+def findRegex(pattern: str) -> Callable[[str], Optional[int]]:
+    def fun(line: str) -> Optional[int]:
         m = re.search(pattern, line)
-        return None if m == None else m.start()
+        return None if m is None else m.start()
     return fun
 
 
-def isFalse():
-    def fun(line):
+def isFalse() -> Callable[[str], bool]:
+    def fun(line: str) -> bool:
         return False
     return fun
 
 
-def isStartingWithToken(token):
-    def fun(line):
+def isStartingWithToken(token: str) -> Callable[[str], bool]:
+    def fun(line: str) -> bool:
         return line.startswith(token)
     return fun
 
 
-def processCFamilyFile(locCounter, file):
+def processCFamilyFile(locCounter: LOCCounter, file: str) -> None:
     """
     Process a file with C/C++-like comments (i.e. // for single line comments, /* ... */ for block comments).
     """
     doProcessFile(locCounter, file, findToken('/*'), findToken('*/'), findToken('//'), isFalse())
 
 
-def processPHPFile(locCounter, file):
+def processPHPFile(locCounter: LOCCounter, file: str) -> None:
     """
     Process a PHP file (i.e. // for single line comments, /* ... */ for block comments, and possibly a <?php instruction on the first line).
     """
     doProcessFile(locCounter, file, findToken('/*'), findToken('*/'), findToken('//'), isStartingWithToken('<?php'))
 
 
-def processCSSFile(locCounter, file):
+def processCSSFile(locCounter: LOCCounter, file: str) -> None:
     """
     Process a CSS file (/* ... */ for block comments, no single line comments).
     """
     doProcessFile(locCounter, file, findToken('/*'), findToken('*/'), noSuchToken(), isFalse())
 
 
-def processScriptFamilyFile(locCounter, file):
+def processScriptFamilyFile(locCounter: LOCCounter, file: str) -> None:
     """
     Process a file whose comments start with a hash character (#).
     """
     doProcessFile(locCounter, file, noSuchToken(), noSuchToken(), findToken('#'), isFalse())
 
 
-def processFortranFile(locCounter, file):
+def processFortranFile(locCounter: LOCCounter, file: str) -> None:
     """
     Process a Fortran 90 file (comments start with an exclamation mark character).
     Comments starting with !DIR$, !$OMP, etc... are counted as code (compiler directives).
@@ -196,14 +199,14 @@ def processFortranFile(locCounter, file):
     doProcessFile(locCounter, file, noSuchToken(), noSuchToken(), findRegex('!(?!\\w+\\$|\\$\\w+)'), isFalse())
 
 
-def processSQLFile(locCounter, file):
+def processSQLFile(locCounter: LOCCounter, file: str) -> None:
     """
     Process a SQL file (comments start with two hyphen characters).
     """
     doProcessFile(locCounter, file, noSuchToken(), noSuchToken(), findToken('--'), isFalse())
 
 
-def processPascalFile(locCounter, file):
+def processPascalFile(locCounter: LOCCounter, file: str) -> None:
     """
     Process a Pascal file ( (* ... *) or { ... } for block comments, // for single line comments).
     Comments starting with a $ character are counted as code (compiler directives).
@@ -213,10 +216,10 @@ def processPascalFile(locCounter, file):
 
 if __name__ == '__main__':
 
-    counters = []
-    extensionToAction = {}
+    counters: list[LOCCounter] = []
+    extensionToAction: dict[str, Callable[[str], None]] = {}
 
-    def registerLanguage(title, processFun, extensions):
+    def registerLanguage(title: str, processFun: Callable[[LOCCounter, str], None], extensions: list[str]) -> None:
         counter = LOCCounter(title)
         action = lambda file: processFun(counter, file)
         counters.append(counter)
