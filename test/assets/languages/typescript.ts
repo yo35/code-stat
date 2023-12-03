@@ -8,7 +8,7 @@
  * Say Hello! to the world.
  */
 function helloWorld(): void {
-	console.log('Hello World!');
+    console.log('Hello World!');
 }
 
 helloWorld(); // I'm a mixed code-comment line (counted as code).

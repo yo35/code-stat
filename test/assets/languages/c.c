@@ -9,12 +9,12 @@
  * Say Hello! to the world.
  */
 void helloWorld() {
-	printf("Hello World!\n");
+    printf("Hello World!\n");
 }
 
 int main() { // I'm a mixed code-comment line (counted as code).
 
-	// I'm a comment line as well.
-	helloWorld();
-	return 0;
+    // I'm a comment line as well.
+    helloWorld();
+    return 0;
 }

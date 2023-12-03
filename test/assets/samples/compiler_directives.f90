@@ -1,5 +1,5 @@
 program myProgram
-	implicit none
+    implicit none
 end program
 
 !GCC$ unroll 4

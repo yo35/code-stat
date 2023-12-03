@@ -5,5 +5,5 @@
 /* I'm a comment line. */
 
 body::before { /* I'm a mixed code-comment line (counted as code). */
-	content: "Hello World!";
+    content: "Hello World!";
 }

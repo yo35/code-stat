@@ -7,27 +7,27 @@
 
 module moduleHelloWorld
 
-	implicit none
-	private
-	public helloWorld
+    implicit none
+    private
+    public helloWorld
 
 contains
 
-	!>
-	!! Say Hello! to the world.
-	!!
-	subroutine helloWorld()
-		print *, 'Hello World!'
-	end subroutine
+    !>
+    !! Say Hello! to the world.
+    !!
+    subroutine helloWorld()
+        print *, 'Hello World!'
+    end subroutine
 
 end module
 
 program programHelloWorld ! I'm a mixed code-comment line (counted as code).
 
-	use moduleHelloWorld
-	implicit none
+    use moduleHelloWorld
+    implicit none
 
-	! I'm a comment line as well.
-	call helloWorld()
+    ! I'm a comment line as well.
+    call helloWorld()
 
 end program

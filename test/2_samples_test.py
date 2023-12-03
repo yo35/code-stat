@@ -29,109 +29,109 @@ codeStat = importlib.import_module('code-stat')
 
 
 def computeLOCCounter(filename, processingFunction):
-	"""
-	Analyze the file corresponding to the given filename with the given processing function
-	(which must be one of the codeStat.process***File(..) function), and return a LOCCounter object
-	with the LOC stats collected on the file.
-	"""
-	counter = codeStat.LOCCounter('Testing')
-	processingFunction(counter, os.path.join(os.path.dirname(__file__), 'assets', 'samples', filename))
-	return counter
+    """
+    Analyze the file corresponding to the given filename with the given processing function
+    (which must be one of the codeStat.process***File(..) function), and return a LOCCounter object
+    with the LOC stats collected on the file.
+    """
+    counter = codeStat.LOCCounter('Testing')
+    processingFunction(counter, os.path.join(os.path.dirname(__file__), 'assets', 'samples', filename))
+    return counter
 
 
 def test_blank_before_first_block_comment():
-	counter = computeLOCCounter('blank_before_first_block_comment.cpp', codeStat.processCFamilyFile)
-	assert counter.fileCount == 1
-	assert counter.codeLineCount == 3
-	assert counter.commentLineCount == 4
+    counter = computeLOCCounter('blank_before_first_block_comment.cpp', codeStat.processCFamilyFile)
+    assert counter.fileCount == 1
+    assert counter.codeLineCount == 3
+    assert counter.commentLineCount == 4
 
 
 def test_blank_before_first_line_comment():
-	counter = computeLOCCounter('blank_before_first_line_comment.cpp', codeStat.processCFamilyFile)
-	assert counter.fileCount == 1
-	assert counter.codeLineCount == 3
-	assert counter.commentLineCount == 2
+    counter = computeLOCCounter('blank_before_first_line_comment.cpp', codeStat.processCFamilyFile)
+    assert counter.fileCount == 1
+    assert counter.codeLineCount == 3
+    assert counter.commentLineCount == 2
 
 
 def test_blank_within_file_header():
-	counter = computeLOCCounter('blank_within_file_header.cpp', codeStat.processCFamilyFile)
-	assert counter.fileCount == 1
-	assert counter.codeLineCount == 3
-	assert counter.commentLineCount == 0
+    counter = computeLOCCounter('blank_within_file_header.cpp', codeStat.processCFamilyFile)
+    assert counter.fileCount == 1
+    assert counter.codeLineCount == 3
+    assert counter.commentLineCount == 0
 
 
 def test_code_after_block_comment():
-	counter = computeLOCCounter('code_after_block_comment.cpp', codeStat.processCFamilyFile)
-	assert counter.fileCount == 1
-	assert counter.codeLineCount == 2
-	assert counter.commentLineCount == 1
+    counter = computeLOCCounter('code_after_block_comment.cpp', codeStat.processCFamilyFile)
+    assert counter.fileCount == 1
+    assert counter.codeLineCount == 2
+    assert counter.commentLineCount == 1
 
 
 def test_mixing_block_comment_and_code_1():
-	counter = computeLOCCounter('mixing_block_comment_and_code_1.cpp', codeStat.processCFamilyFile)
-	assert counter.fileCount == 1
-	assert counter.codeLineCount == 3
-	assert counter.commentLineCount == 2
+    counter = computeLOCCounter('mixing_block_comment_and_code_1.cpp', codeStat.processCFamilyFile)
+    assert counter.fileCount == 1
+    assert counter.codeLineCount == 3
+    assert counter.commentLineCount == 2
 
 
 def test_mixing_block_comment_and_code_2():
-	counter = computeLOCCounter('mixing_block_comment_and_code_2.cpp', codeStat.processCFamilyFile)
-	assert counter.fileCount == 1
-	assert counter.codeLineCount == 3
-	assert counter.commentLineCount == 1
+    counter = computeLOCCounter('mixing_block_comment_and_code_2.cpp', codeStat.processCFamilyFile)
+    assert counter.fileCount == 1
+    assert counter.codeLineCount == 3
+    assert counter.commentLineCount == 1
 
 
 def test_mixing_block_comment_and_code_3():
-	counter = computeLOCCounter('mixing_block_comment_and_code_3.cpp', codeStat.processCFamilyFile)
-	assert counter.fileCount == 1
-	assert counter.codeLineCount == 3
-	assert counter.commentLineCount == 3
+    counter = computeLOCCounter('mixing_block_comment_and_code_3.cpp', codeStat.processCFamilyFile)
+    assert counter.fileCount == 1
+    assert counter.codeLineCount == 3
+    assert counter.commentLineCount == 3
 
 
 def test_mixing_block_comment_and_code_4():
-	counter = computeLOCCounter('mixing_block_comment_and_code_4.cpp', codeStat.processCFamilyFile)
-	assert counter.fileCount == 1
-	assert counter.codeLineCount == 3
-	assert counter.commentLineCount == 2
+    counter = computeLOCCounter('mixing_block_comment_and_code_4.cpp', codeStat.processCFamilyFile)
+    assert counter.fileCount == 1
+    assert counter.codeLineCount == 3
+    assert counter.commentLineCount == 2
 
 
 def test_nested_block_comment_1():
-	counter = computeLOCCounter('nested_block_comment_1.cpp', codeStat.processCFamilyFile)
-	assert counter.fileCount == 1
-	assert counter.codeLineCount == 4
-	assert counter.commentLineCount == 1
+    counter = computeLOCCounter('nested_block_comment_1.cpp', codeStat.processCFamilyFile)
+    assert counter.fileCount == 1
+    assert counter.codeLineCount == 4
+    assert counter.commentLineCount == 1
 
 
 def test_nested_block_comment_2():
-	counter = computeLOCCounter('nested_block_comment_2.cpp', codeStat.processCFamilyFile)
-	assert counter.fileCount == 1
-	assert counter.codeLineCount == 3
-	assert counter.commentLineCount == 2
+    counter = computeLOCCounter('nested_block_comment_2.cpp', codeStat.processCFamilyFile)
+    assert counter.fileCount == 1
+    assert counter.codeLineCount == 3
+    assert counter.commentLineCount == 2
 
 
 def test_Fortran_compiler_directives():
-	counter = computeLOCCounter('compiler_directives.f90', codeStat.processFortranFile)
-	assert counter.fileCount == 1
-	assert counter.codeLineCount == 5
-	assert counter.commentLineCount == 0
+    counter = computeLOCCounter('compiler_directives.f90', codeStat.processFortranFile)
+    assert counter.fileCount == 1
+    assert counter.codeLineCount == 5
+    assert counter.commentLineCount == 0
 
 
 def test_Pascal_compiler_directives_with_braces():
-	counter = computeLOCCounter('compiler_directive_braces.pas', codeStat.processPascalFile)
-	assert counter.fileCount == 1
-	assert counter.codeLineCount == 4
-	assert counter.commentLineCount == 0
+    counter = computeLOCCounter('compiler_directive_braces.pas', codeStat.processPascalFile)
+    assert counter.fileCount == 1
+    assert counter.codeLineCount == 4
+    assert counter.commentLineCount == 0
 
 
 def test_Pascal_compiler_directives_with_parentheses():
-	counter = computeLOCCounter('compiler_directive_parentheses.pas', codeStat.processPascalFile)
-	assert counter.fileCount == 1
-	assert counter.codeLineCount == 4
-	assert counter.commentLineCount == 0
+    counter = computeLOCCounter('compiler_directive_parentheses.pas', codeStat.processPascalFile)
+    assert counter.fileCount == 1
+    assert counter.codeLineCount == 4
+    assert counter.commentLineCount == 0
 
 
 def test_Pascal_compiler_directives_with_slashes():
-	counter = computeLOCCounter('compiler_directive_slashes.pas', codeStat.processPascalFile)
-	assert counter.fileCount == 1
-	assert counter.codeLineCount == 3
-	assert counter.commentLineCount == 1
+    counter = computeLOCCounter('compiler_directive_slashes.pas', codeStat.processPascalFile)
+    assert counter.fileCount == 1
+    assert counter.codeLineCount == 3
+    assert counter.commentLineCount == 1

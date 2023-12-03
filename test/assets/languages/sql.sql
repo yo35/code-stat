@@ -7,7 +7,7 @@
 CREATE FUNCTION helloWorld()
 RETURNS VARCHAR(20)
 BEGIN
-	RETURN 'Hello World!'
+    RETURN 'Hello World!'
 END;
 
 SELECT helloWorld(); -- I'm a mixed code-comment line (counted as code).

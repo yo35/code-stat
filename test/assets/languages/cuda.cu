@@ -9,11 +9,11 @@
  * Say Hello! to the world (from a CUDA kernel).
  */
 __global__ void helloWorld() {
-	printf("Hello World!\n");
+    printf("Hello World!\n");
 }
 
 int main() { // I'm a mixed code-comment line (counted as code).
-	helloWorld<<< 1, 1 >>>();
-	cudaDeviceSynchronize();
-	return 0;
+    helloWorld<<< 1, 1 >>>();
+    cudaDeviceSynchronize();
+    return 0;
 }

@@ -9,7 +9,7 @@
  * Say Hello! to the world.
  */
 function helloWorld() {
-	echo 'Hello World!';
+    echo 'Hello World!';
 }
 
 ?>

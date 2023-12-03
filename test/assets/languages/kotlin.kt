@@ -10,11 +10,11 @@ package com.yo35.codestat
  * Say Hello! to the world.
  */
 private fun helloWorld() {
-	println("Hello World!")
+    println("Hello World!")
 }
 
 fun main() { // I'm a mixed code-comment line (counted as code).
 
-	// I'm a comment line as well.
-	helloWorld()
+    // I'm a comment line as well.
+    helloWorld()
 }
