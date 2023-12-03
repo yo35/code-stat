@@ -1,0 +1,97 @@
+C/C++
+-----
+Source files:              2
+Code lines:               16
+Comment lines:            10
+Comment/code ratio:       62 %
+
+C#
+--
+Source files:              1
+Code lines:                9
+Comment lines:             5
+Comment/code ratio:       56 %
+
+CSS
+---
+Source files:              1
+Code lines:                3
+Comment lines:             1
+Comment/code ratio:       33 %
+
+CUDA
+----
+Source files:              1
+Code lines:                9
+Comment lines:             4
+Comment/code ratio:       44 %
+
+Fortran 90
+----------
+Source files:              1
+Code lines:               15
+Comment lines:             5
+Comment/code ratio:       33 %
+
+Java
+----
+Source files:              1
+Code lines:                9
+Comment lines:             5
+Comment/code ratio:       56 %
+
+JavaScript
+----------
+Source files:              1
+Code lines:                6
+Comment lines:             5
+Comment/code ratio:       83 %
+
+Kotlin
+------
+Source files:              1
+Code lines:                7
+Comment lines:             5
+Comment/code ratio:       71 %
+
+Pascal
+------
+Source files:              1
+Code lines:                9
+Comment lines:             5
+Comment/code ratio:       56 %
+
+PHP
+---
+Source files:              1
+Code lines:                6
+Comment lines:             4
+Comment/code ratio:       67 %
+
+Python
+------
+Source files:              1
+Code lines:                7
+Comment lines:             2
+Comment/code ratio:       29 %
+
+SQL
+---
+Source files:              1
+Code lines:                6
+Comment lines:             1
+Comment/code ratio:       17 %
+
+TypeScript
+----------
+Source files:              1
+Code lines:                4
+Comment lines:             4
+Comment/code ratio:      100 %
+
+Unix shell script
+-----------------
+Source files:              1
+Code lines:                4
+Comment lines:             2
+Comment/code ratio:       50 %

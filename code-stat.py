@@ -59,6 +59,11 @@ class LOCCounter:
         self.codeLineCount = 0
         self.commentLineCount = 0
 
+    def increment(self, fileCount: int, codeLineCount: int, commentLineCount: int) -> None:
+        self.fileCount += fileCount
+        self.codeLineCount += codeLineCount
+        self.commentLineCount += commentLineCount
+
     def printStats(self) -> None:
         print(self.title)
         print('-' * len(self.title))
@@ -119,14 +124,16 @@ def doProcessFile(
     Core processing function.
     """
 
-    locCounter.fileCount += 1
+    codeLineCount = 0
+    commentLineCount = 0
+
     with open(file, 'r') as f:
         withinBlockComment = False
         withinHeader = True
         lineIndex = 0 # 1-based index
         for line in f:
             line = line.strip()
-            lineIndex = lineIndex + 1
+            lineIndex += 1
 
             # Blank line
             if len(line) == 0:
@@ -137,7 +144,7 @@ def doProcessFile(
             # Within a block comment
             if withinBlockComment:
                 if not withinHeader:
-                    locCounter.commentLineCount += 1
+                    commentLineCount += 1
 
             # Regular code
             else:
@@ -145,9 +152,9 @@ def doProcessFile(
                 singleLineCommentToken = findSingleLineCommentToken(line)
                 if beginCommentToken == 0 or singleLineCommentToken == 0:
                     if not withinHeader:
-                        locCounter.commentLineCount += 1
+                        commentLineCount += 1
                 else:
-                    locCounter.codeLineCount += 1
+                    codeLineCount += 1
                     if withinHeader and not (lineIndex == 1 and isMandatoryFirstInstruction(line)):
                         withinHeader = False
                 if beginCommentToken is not None and (singleLineCommentToken is None or beginCommentToken < singleLineCommentToken):
@@ -168,6 +175,9 @@ def doProcessFile(
                         withinBlockComment = False
                         break
                     line = line[(beginCommentToken + 1):]
+
+    # Increment the counter (only at the end, in case of exceptions).
+    locCounter.increment(1, codeLineCount, commentLineCount)
 
 
 def processCFamilyFile(locCounter: LOCCounter, file: str) -> None:
@@ -258,7 +268,10 @@ def processPascalFile(locCounter: LOCCounter, file: str) -> None:
     )
 
 
-if __name__ == '__main__':
+def run(filesOrDirectories: list[str]) -> None:
+    """
+    Script entry point.
+    """
 
     counters: list[LOCCounter] = []
     extensionToAction: dict[str, Callable[[str], None]] = {}
@@ -289,7 +302,7 @@ if __name__ == '__main__':
     registerLanguage('Unix shell script', processScriptFamilyFile, [ '.sh', '.bash', '.csh', '.ksh', '.zsh' ])
 
     # Visit recursively all the files and folders passed on the command line.
-    toProcess = [os.path.abspath(f) for f in sys.argv[:0:-1]]
+    toProcess = [os.path.abspath(f) for f in filesOrDirectories]
     errorCount = 0
     while len(toProcess) != 0:
         path = toProcess.pop()
@@ -318,3 +331,8 @@ if __name__ == '__main__':
     if allCountersAreEmpty:
         print('No source code file found')
         print()
+
+
+# Invoke the script entry point.
+if __name__ == '__main__':
+    run(sys.argv[:0:-1])
