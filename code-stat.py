@@ -130,6 +130,7 @@ def doProcessFile(
     with open(file, 'r') as f:
         withinBlockComment = False
         withinHeader = True
+        headerLineCount = 0
         lineIndex = 0 # 1-based index
         for line in f:
             line = line.strip()
@@ -139,11 +140,14 @@ def doProcessFile(
             if len(line) == 0:
                 if not withinBlockComment:
                     withinHeader = False
+                    # Header lines are ignored if immediately followed by a blank line.
                 continue
 
             # Within a block comment
             if withinBlockComment:
-                if not withinHeader:
+                if withinHeader:
+                    headerLineCount += 1
+                else:
                     commentLineCount += 1
 
             # Regular code
@@ -151,12 +155,15 @@ def doProcessFile(
                 beginCommentToken = findBeginCommentToken(line)
                 singleLineCommentToken = findSingleLineCommentToken(line)
                 if beginCommentToken == 0 or singleLineCommentToken == 0:
-                    if not withinHeader:
+                    if withinHeader:
+                        headerLineCount += 1
+                    else:
                         commentLineCount += 1
                 else:
                     codeLineCount += 1
                     if withinHeader and not (lineIndex == 1 and isMandatoryFirstInstruction(line)):
                         withinHeader = False
+                        commentLineCount += headerLineCount # Header lines are counted as comment if immediately followed by code.
                 if beginCommentToken is not None and (singleLineCommentToken is None or beginCommentToken < singleLineCommentToken):
                     withinBlockComment = True
                     line = line[(beginCommentToken + 1):]

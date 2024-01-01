@@ -60,6 +60,13 @@ def test_blank_within_file_header():
     assert counter.commentLineCount == 0
 
 
+def test_no_blank_after_first_comment():
+    counter = computeLOCCounter('no_blank_after_first_comment.cpp', codeStat.processCFamilyFile)
+    assert counter.fileCount == 1
+    assert counter.codeLineCount == 3
+    assert counter.commentLineCount == 5
+
+
 def test_code_after_block_comment():
     counter = computeLOCCounter('code_after_block_comment.cpp', codeStat.processCFamilyFile)
     assert counter.fileCount == 1
