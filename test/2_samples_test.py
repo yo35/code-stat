@@ -2,7 +2,7 @@
 #                                                                              #
 #   This file is part of Code Stat, a Python script to compute line of code    #
 #   metrics on a set of source code files, for several programming languages.  #
-#   Copyright (C) 2023  Yoann Le Montagner <yo35 -at- melix.net>               #
+#   Copyright (C) 2023-2024  Yoann Le Montagner <yo35 -at- melix.net>          #
 #                                                                              #
 #   This program is free software: you can redistribute it and/or modify       #
 #   it under the terms of the GNU General Public License as published by       #
