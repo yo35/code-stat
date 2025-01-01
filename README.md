@@ -35,13 +35,13 @@ CSS               | `.css`
 CUDA              | `.cu` `.cuh`
 Fortran 90        | `.f90`
 Java              | `.java`
-JavaScript        | `.js` `.jsx` `.mjs`
+JavaScript        | `.js` `.jsx` `.cjs` `.mjs`
 Kotlin            | `.kt`
 Pascal            | `.pas`
 PHP               | `.php`
 Python            | `.py`
 SQL               | `.sql`
-TypeScript        | `.ts` `.tsx` `.mts`
+TypeScript        | `.ts` `.tsx` `.cts` `.mts`
 Unix shell script | `.sh` `.bash` `.csh` `.ksh` `.zsh`
 
 Only files having one of the above-mentionned extensions are analyzed.

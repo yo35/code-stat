@@ -299,13 +299,13 @@ def run(filesOrDirectories: list[str]) -> None:
     registerLanguage('CUDA'             , processCFamilyFile     , [ '.cu', '.cuh' ])
     registerLanguage('Fortran 90'       , processFortranFile     , [ '.f90' ])
     registerLanguage('Java'             , processCFamilyFile     , [ '.java' ])
-    registerLanguage('JavaScript'       , processCFamilyFile     , [ '.js', '.jsx', '.mjs' ])
+    registerLanguage('JavaScript'       , processCFamilyFile     , [ '.js', '.jsx', '.cjs', '.mjs' ])
     registerLanguage('Kotlin'           , processCFamilyFile     , [ '.kt' ])
     registerLanguage('Pascal'           , processPascalFile      , [ '.pas' ])
     registerLanguage('PHP'              , processPHPFile         , [ '.php' ])
     registerLanguage('Python'           , processScriptFamilyFile, [ '.py' ])
     registerLanguage('SQL'              , processSQLFile         , [ '.sql' ])
-    registerLanguage('TypeScript'       , processCFamilyFile     , [ '.ts', '.tsx', '.mts' ])
+    registerLanguage('TypeScript'       , processCFamilyFile     , [ '.ts', '.tsx', '.cts', '.mts' ])
     registerLanguage('Unix shell script', processScriptFamilyFile, [ '.sh', '.bash', '.csh', '.ksh', '.zsh' ])
 
     # Visit recursively all the files and folders passed on the command line.
